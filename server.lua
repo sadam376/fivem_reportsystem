@@ -17,7 +17,7 @@ CreateThread(function()
                             if xPlayer.source ~= xTarget.source then
                                 if report == true then
                                     TriggerClientEvent('chat:addMessage',  xTarget.source,  {
-                                        template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #ff0000; border-radius: 10px;"><i class="fas fa-question-circle" style="font-size: medium;"></i>  <span style="font-weight: 600;">Jelentés tőle: <span style="color: red; font-weight:600 ;">'..GetPlayerName(xTarget.source)..'</span> (^3'..xTarget.source..'^0) (^3'..xTarget.getName()..'^0)  <span style="font-weight: 600;">  <br><i class="fas fa-comment-dots"></i> Üzenet: </span> <span style="color: #ff9100;">'..message..'</span></div>', 
+                                        template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #ff0000; border-radius: 10px;"><i class="fas fa-question-circle" style="font-size: medium;"></i>  <span style="font-weight: 600;">Jelentés tőle: <span style="color: red; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) (^3'..xPlayer.getName()..'^0)  <span style="font-weight: 600;">  <br><i class="fas fa-comment-dots"></i> Üzenet: </span> <span style="color: #ff9100;">'..message..'</span></div>', 
                                         args = { playerName, args, source }
                                     }) 
                                 end
