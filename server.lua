@@ -125,11 +125,23 @@ RegisterCommand(Config.ReplyCommand, function(source, args, rawCommand)
 end)
 
 
-CreateThread(function()
-    while true do
-        if Config.DeleteReport then
-            table.remove(reporters)  
-        end      
-        Wait(Config.DeleteReportTime)
-    end
+RegisterCommand("reportclose", function(source, args, rawCommand)
+    local xPlayer = ESX.GetPlayerFromId(source)
+    local xTarget = ESX.GetPlayerFromId(args[1])
+    if args[1] then
+        reporters[xTarget.source] = false
+        TriggerClientEvent('chat:addMessage',  xTarget.source,  {
+            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  a jelentésedre.  <span style="font-weight: 600;">Válasz:</span> <span style="color: orange; font-weight:600 ;">'..message..'</span></div>', 
+            args = { playerName, args, source }
+        }) 
+        TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
+            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  a jelentésedre.  <span style="font-weight: 600;">Válasz:</span> <span style="color: orange; font-weight:600 ;">'..message..'</span></div>', 
+            args = { playerName, args, source }
+        }) 
+    else
+        TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
+            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #c20000; border-radius: 10px;"><i class="fas fa-exclamation-circle" style="font-size: medium;"></i> <span style="color: white;"><span style="font-weight:600 ; color: red;">Sikertelen</span> válasz! <span style="font-weight:600 ;">Hiba:</span> <span style="color: orange;">A játékos (ID) nincsen megadva</span></div>', 
+            args = { playerName, args, source }
+        }) 
+     end
 end)
