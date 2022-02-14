@@ -89,7 +89,7 @@ RegisterCommand(Config.ReplyCommand, function(source, args, rawCommand)
                                 if report == true then
                                     if Config.ShowReplyMessageForAdmins then
                                         TriggerClientEvent('chat:addMessage',  Admins.source,  {
-                                            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; width: 450px; background-color:#2b2b2b; border: 2.2px solid #00d62e; border-radius: 10px;"><i class="fas fa-user-edit" style="font-size: medium;"></i> <span style="color: #00ff48; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  <span style="color: #00aaff; font-weight:600 ;">'..GetPlayerName(xTarget.source)..'</span> (^3'..xTarget.source..'^0) jelentésére.   (Válasza: <span style="color: orange; font-weight:600 ;">'..message..'</span>)</div>', 
+                                            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00d62e; border-radius: 10px;"><i class="fas fa-user-edit" style="font-size: medium;"></i> <span style="color: #00ff48; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  <span style="color: #00aaff; font-weight:600 ;">'..GetPlayerName(xTarget.source)..'</span> (^3'..xTarget.source..'^0) jelentésére.   (Válasza: <span style="color: orange; font-weight:600 ;">'..message..'</span>)</div>', 
                                             args = { playerName, args, source }
                                         })
                                     else
@@ -125,22 +125,45 @@ RegisterCommand(Config.ReplyCommand, function(source, args, rawCommand)
 end)
 
 
-RegisterCommand("reportclose", function(source, args, rawCommand)
+RegisterCommand(Config.ReportClose, function(source, args, rawCommand)
     local xPlayer = ESX.GetPlayerFromId(source)
     local xTarget = ESX.GetPlayerFromId(args[1])
+    local xAll = ESX.GetPlayers()
     if args[1] then
-        reporters[xTarget.source] = false
-        TriggerClientEvent('chat:addMessage',  xTarget.source,  {
-            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  a jelentésedre.  <span style="font-weight: 600;">Válasz:</span> <span style="color: orange; font-weight:600 ;">'..message..'</span></div>', 
-            args = { playerName, args, source }
-        }) 
-        TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
-            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) válaszolt  a jelentésedre.  <span style="font-weight: 600;">Válasz:</span> <span style="color: orange; font-weight:600 ;">'..message..'</span></div>', 
-            args = { playerName, args, source }
-        }) 
+        if  reporters[xTarget.source] then
+            reporters[xTarget.source] = false
+            --Player
+            TriggerClientEvent('chat:addMessage',  xTarget.source,  {
+                template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) bezárta a jelentésedet.</div>', 
+                args = { playerName, args, source }
+            }) 
+            --Admin
+            TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
+                template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00ddff; border-radius: 10px;"><i class="fas fa-envelope" style="font-size: medium;"></i> <span style="color: #00ddff; font-weight:600 ;">'..GetPlayerName(xTarget.source)..'</span> (^3'..xTarget.source..'^0) játékos jelentése be lett zárva.</div>', 
+                args = { playerName, args, source }
+            }) 
+            for i=1, #xAll, 1 do
+                local Admins = ESX.GetPlayerFromId(xAll[i])
+                if Admins.getGroup() ~= "user" then
+                    if xPlayer.source ~= xTarget.source then
+                        if Config.ClosMessage then
+                            TriggerClientEvent('chat:addMessage',  Admins.source,  {
+                                template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #00d62e; border-radius: 10px;"><i class="fas fa-user-edit" style="font-size: medium;"></i> <span style="color: #00ff48; font-weight:600 ;">'..GetPlayerName(xPlayer.source)..'</span> (^3'..xPlayer.source..'^0) bezárta  <span style="color: #00aaff; font-weight:600 ;">'..GetPlayerName(xTarget.source)..'</span> (^3'..xTarget.source..'^0) jelentését.</div>', 
+                                args = { playerName, args, source }
+                            })
+                        end 
+                    end
+                end
+            end
+        else
+            TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
+                template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #c20000; border-radius: 10px;"><i class="fas fa-exclamation-circle" style="font-size: medium;"></i> <span style="color: white;"><span style="font-weight:600 ; color: red;">Sikertelen</span> bezárás! <span style="font-weight:600 ;">Hiba:</span> <span style="color: orange;">Ez a játékos nem kért segítséget</span></div>', 
+                args = { playerName, args, source }
+            }) 
+        end
     else
         TriggerClientEvent('chat:addMessage',  xPlayer.source,  {
-            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #c20000; border-radius: 10px;"><i class="fas fa-exclamation-circle" style="font-size: medium;"></i> <span style="color: white;"><span style="font-weight:600 ; color: red;">Sikertelen</span> válasz! <span style="font-weight:600 ;">Hiba:</span> <span style="color: orange;">A játékos (ID) nincsen megadva</span></div>', 
+            template = '<div style="padding: 0.4vw 0.5vw; font-size: 15px; margin: 0.5vw; background-color:#2b2b2b; border: 2.2px solid #c20000; border-radius: 10px;"><i class="fas fa-exclamation-circle" style="font-size: medium;"></i> <span style="color: white;"><span style="font-weight:600 ; color: red;">Sikertelen</span> bezárás! <span style="font-weight:600 ;">Hiba:</span> <span style="color: orange;">A játékos (ID) nincsen megadva</span></div>', 
             args = { playerName, args, source }
         }) 
      end
