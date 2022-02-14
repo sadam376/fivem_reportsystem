@@ -1,4 +1,3 @@
--- A script nevét ne módosítsd!
 Config = {}
 
 
@@ -16,4 +15,3 @@ Config.ReplyCommand = "r" --Válasz parancs
 Config.ReportCommand = "report" -- Report írás parancs
 Config.ToggleReport = "togreport" --Report megjelenés ki /be kapcsolásának a parancsa
 
--- A script nevét ne módosítsd!
