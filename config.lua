@@ -14,4 +14,5 @@ Config.DeleteReportTime = 200000 -- Reportok törlésének az ideje
 Config.ReplyCommand = "r" --Válasz parancs
 Config.ReportCommand = "report" -- Report írás parancs
 Config.ToggleReport = "togreport" --Report megjelenés ki /be kapcsolásának a parancsa
+Config.ReportClose = "cr" -- Report bezárása
 
